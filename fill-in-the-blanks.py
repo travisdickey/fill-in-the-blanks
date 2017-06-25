@@ -48,12 +48,6 @@ def is_correct(user_answer, replacement, answers):
         return user_answer in answers[3]
     elif replacement == blanks[4]:
         return user_answer in answers[4]
-    elif replacement == blanks[5]:
-        return user_answer in answers[5]
-    elif replacement == blanks[6]:
-        return user_answer in answers[6]
-    elif replacement == blanks[7]:
-        return user_answer in answers[7]
     return None
 
 # Starts game, prompts user to decide difficulty level; calls play_game at appropriate level
@@ -71,12 +65,8 @@ def difficulty():
         return play_game(hard, answers_hard)
     return difficulty()
 
-# prompts user to supply an answer then runs is_correct to check answer. Returns
-''' def prompt_user(user_answer, replacement, answers):
-    user_answer = raw_input("What should be substitued for " + replacement + "?" + " ")
-    if is_correct(user_answer, replacement, answers):
-        word = word.replace(replacement, user_answer)
-        return word '''
+# takes word, replacement, user_answer, revised; prints text for a correct response,
+# also returns word, revised
 def display_corrected(word, replacement, user_answer, revised):
     word = word.replace(replacement, user_answer)
     revised = corrected_string(replacement, user_answer, revised)
@@ -90,6 +80,8 @@ def corrected_string(word, user_answer, quiz_string):
     revised = revised.replace(word, user_answer, 1)
     return revised
 
+# prompts user and checks answers after first incorrect response; takes attempts, max_attempts, word,
+# replacement, revised, and answer; returns word, revised
 def not_correct(attempts, max_attempts, word, replacement, revised, answers):
     while attempts < max_attempts:
         if (max_attempts - attempts) > 1:
@@ -104,11 +96,11 @@ def not_correct(attempts, max_attempts, word, replacement, revised, answers):
             if is_correct(user_answer, replacement, answers):
                 word, revised = display_corrected(word, replacement, user_answer, revised)
                 break
-            else:
-                print "I'm sorry. You have reached the maximum number of incorrect responses. Please try again later."
-                quit()
+            print "I'm sorry. You have reached the maximum number of incorrect responses. Please try again later."
+            quit()
         attempts += 1
     return word, revised
+
 # Runs a fill-in-the-blanks quiz; takes quiz_string and answers; prompts user
 #to replace blanks in quiz_string; displays corrected quiz_string
 def play_game(quiz_string, answers):
@@ -125,23 +117,6 @@ def play_game(quiz_string, answers):
                 word, revised = display_corrected(word, replacement, user_answer, revised)
             else:
                 not_correct(attempts, max_attempts, word, replacement, revised, answers)
-                '''while attempts < max_attempts:
-                    if (max_attempts - attempts) > 1:
-                        print "\nI'm sorry. That is not correct. Try again. You have " + str(max_attempts - attempts) + " tries left."
-                        user_answer = raw_input("What should be substitued for " + replacement + "?" + " ")
-                        if is_correct(user_answer, replacement, answers):
-                            word, revised = display_corrected(word, replacement, user_answer, revised)
-                            break
-                    elif (max_attempts - attempts) == 1:
-                        print "\nI'm sorry. That is not correct. You have only " + str(max_attempts - attempts) + " try left."
-                        user_answer = raw_input("What should be substitued for " + replacement + "?" + " ")
-                        if is_correct(user_answer, replacement, answers):
-                            word, revised = display_corrected(word, replacement, user_answer, revised)
-                            break
-                        else:
-                            print "I'm sorry. You have reached the maximum number of incorrect responses. Please try again later."
-                            quit()
-                    attempts += 1 '''
         replaced.append(word)
     replaced = " ".join(replaced)
     return replaced
