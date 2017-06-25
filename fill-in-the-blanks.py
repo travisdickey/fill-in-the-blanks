@@ -77,6 +77,12 @@ def difficulty():
     if is_correct(user_answer, replacement, answers):
         word = word.replace(replacement, user_answer)
         return word '''
+def display_corrected(word, replacement, user_answer, revised):
+    word = word.replace(replacement, user_answer)
+    revised = corrected_string(replacement, user_answer, revised)
+    print "\nThat is correct! The paragraph now reads as follows:\n" + revised + "\n"
+    print "Well done! Try the next one."
+    return word, revised
 
 # Takes current blank, user_answer, and quiz_string and returns revised quiz_string.
 def corrected_string(word, user_answer, quiz_string):
@@ -84,12 +90,30 @@ def corrected_string(word, user_answer, quiz_string):
     revised = revised.replace(word, user_answer, 1)
     return revised
 
+def not_correct(attempts, max_attempts, word, replacement, revised, answers):
+    while attempts < max_attempts:
+        if (max_attempts - attempts) > 1:
+            print "\nI'm sorry. That is not correct. Try again. You have " + str(max_attempts - attempts) + " tries left."
+            user_answer = raw_input("What should be substitued for " + replacement + "?" + " ")
+            if is_correct(user_answer, replacement, answers):
+                word, revised = display_corrected(word, replacement, user_answer, revised)
+                break
+        elif (max_attempts - attempts) == 1:
+            print "\nI'm sorry. That is not correct. You have only " + str(max_attempts - attempts) + " try left."
+            user_answer = raw_input("What should be substitued for " + replacement + "?" + " ")
+            if is_correct(user_answer, replacement, answers):
+                word, revised = display_corrected(word, replacement, user_answer, revised)
+                break
+            else:
+                print "I'm sorry. You have reached the maximum number of incorrect responses. Please try again later."
+                quit()
+        attempts += 1
+    return word, revised
 # Runs a fill-in-the-blanks quiz; takes quiz_string and answers; prompts user
 #to replace blanks in quiz_string; displays corrected quiz_string
 def play_game(quiz_string, answers):
     replaced = []
-    attempts = 1
-    max_attempts = 5
+    attempts, max_attempts = 1, 5
     revised = quiz_string
     print "\n" + quiz_string + "\n"
     quiz_string = quiz_string.split()
@@ -98,34 +122,26 @@ def play_game(quiz_string, answers):
         if replacement != None:
             user_answer = raw_input("What should be substitued for " + replacement + "?" + " ")
             if is_correct(user_answer, replacement, answers):
-                word = word.replace(replacement, user_answer)
-                revised = corrected_string(replacement, user_answer, revised)
-                print "\nThat is correct! The paragraph now reads as follows:\n" + revised + "\n"
-                print "Well done! Try the next one."
+                word, revised = display_corrected(word, replacement, user_answer, revised)
             else:
-                while attempts < max_attempts:
+                not_correct(attempts, max_attempts, word, replacement, revised, answers)
+                '''while attempts < max_attempts:
                     if (max_attempts - attempts) > 1:
                         print "\nI'm sorry. That is not correct. Try again. You have " + str(max_attempts - attempts) + " tries left."
                         user_answer = raw_input("What should be substitued for " + replacement + "?" + " ")
                         if is_correct(user_answer, replacement, answers):
-                            word = word.replace(replacement, user_answer)
-                            revised = corrected_string(replacement, user_answer, revised)
-                            print "\nThat is correct! The paragraph now reads as follows:\n" + revised + "\n"
-                            print "Well done! Try the next one."
+                            word, revised = display_corrected(word, replacement, user_answer, revised)
                             break
                     elif (max_attempts - attempts) == 1:
                         print "\nI'm sorry. That is not correct. You have only " + str(max_attempts - attempts) + " try left."
                         user_answer = raw_input("What should be substitued for " + replacement + "?" + " ")
                         if is_correct(user_answer, replacement, answers):
-                            word = word.replace(replacement, user_answer)
-                            revised = corrected_string(replacement, user_answer, revised)
-                            print "\nThat is correct! The paragraph now reads as follows:\n" + revised + "\n"
-                            print "Well done! Try the next one."
+                            word, revised = display_corrected(word, replacement, user_answer, revised)
                             break
                         else:
                             print "I'm sorry. You have reached the maximum number of incorrect responses. Please try again later."
                             quit()
-                    attempts += 1
+                    attempts += 1 '''
         replaced.append(word)
     replaced = " ".join(replaced)
     return replaced
